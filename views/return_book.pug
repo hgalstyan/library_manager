@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    h1 Patron: Return Book
+    
+    p
+      strong Book Title: 
+      | #{book}
+    p
+      strong Loaned By: 
+      | #{patron}
+    p
+      strong Loaned On: 
+      | #{loan.loaned_on}
+    p
+      strong Return By: 
+      | #{loan.return_by}
+    form(action=`/books/return/${id}`, method="post")
+      p
+        label(for='returned_on') Returned on:
+        input#returned_on(type='text', value=`${todaysDate}`, name="returned_on")
+      p
+        input(type='submit', value='Return Book')
