@@ -45,28 +45,18 @@ router.get("/checked",(req,res,next)=>{
 
 //NEW BOOK GET
 router.get("/new", (req, res, next)=> {
-  res.render("new_book");
+    let errors = [req.query.errors];
+  res.render("new_book", {errors});
 });
 
 //NEW BOOK POST
 router.post("/new",(req,res,next)=>{
-    console.log("POST: "+req.body)
-    if(req.body = {}) res.send("Please fill all the fields");
   Book.create(req.body)
    .then(function(book) {
      res.redirect("/books");
-   }).catch(function(err){
-     if (error.name === "SequelizeValidationError") {
-        res.render("book_new", {
-          errors: err.errors,
-          title: req.body.title,
-          genre: req.body.genre,
-          author: req.body.author,
-          first_published: req.body.first_published
-        });
-      } else {
-        throw error;
-      }
+   }).catch(function(errors){
+        const errorMessages = errors.errors.map(err => err.message);
+        return res.redirect(`/books/new/?errors=${errorMessages}`);
    }).catch(function(error) {
       res.send(500);
     });
